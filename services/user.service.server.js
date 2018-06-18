@@ -14,8 +14,12 @@ module.exports = function (app) {
         userModel
             .findUserByCredentials(credentials)
             .then(function (user) {
+                if(user !== null){
                 req.session['currentUser'] = user;
                 res.json(user);
+            } else {
+                res.sendStatus(204);
+                }
             })
     }
 
@@ -36,7 +40,11 @@ module.exports = function (app) {
         var username = req.params['username'];
         userModel.findUserByUsername(username)
             .then(function (user) {
+                if (user !== null){
                 res.json(user);
+                } else {
+                    res.sendStatus(204);
+                }
             })
     }
 
