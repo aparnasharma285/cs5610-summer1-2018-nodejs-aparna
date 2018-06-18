@@ -3,6 +3,7 @@ module.exports = function (app) {
     app.get('/api/user/:userId', findUserById);
     app.get('/api/user/username/:username', findUserByUsername);
     app.post('/api/user', createUser);
+    app.put('/api/user', updateProfile);
     app.get('/api/profile', profile);
     app.post('/api/logout', logout);
     app.post('/api/login', login);
@@ -63,6 +64,11 @@ module.exports = function (app) {
                     res.json(response);
                 }
             })
+    }
+
+    function updateProfile(req, res) {
+        var updatedUser = req.body;
+        return userModel.updateUser(updatedUser)
     }
 
     function findAllUsers(req, res) {

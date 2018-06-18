@@ -12,12 +12,47 @@ function findUserById(userId) {
 
 function createUser(user) {
     return findUserByUsername(user.username).then(response => {
-            if (response.length > 0) {
-                return {error:"User Already Exists!"};
-            } else {
-                return userModel.create(user);
-            }
-        })
+        if (response.length > 0) {
+            return {error: "User Already Exists!"};
+        } else {
+            return userModel.create(user);
+        }
+    })
+
+}
+
+function updateUser(updatedUser) {
+
+    userModel.findOne({username: updatedUser.username}, function (err, existingUser) {
+        if (updatedUser.password != null && updatedUser.password.length > 0) {
+            existingUser.password = updatedUser.password;
+        }
+        if (updatedUser.email != null && updatedUser.email.length > 0) {
+            existingUser.email = updatedUser.email;
+        }
+        if (updatedUser.firstName != null && updatedUser.firstName.length > 0) {
+            existingUser.firstName = updatedUser.firstName;
+        }
+        if (updatedUser.lastName != null && updatedUser.lastName.length > 0) {
+            existingUser.lastName = updatedUser.lastName;
+        }
+        if (updatedUser.phone != null && updatedUser.phone.length > 0) {
+           existingUser.phone = updatedUser.phone;
+        }
+        if (updatedUser.address != null && updatedUser.address.length > 0) {
+            existingUser.address = updatedUser.address;
+        }
+
+        return existingUser.save();
+    })
+
+
+
+
+
+
+    return updatedUser;
+
 
 }
 
@@ -34,7 +69,8 @@ var api = {
     findAllUsers: findAllUsers,
     findUserById: findUserById,
     findUserByCredentials: findUserByCredentials,
-    findUserByUsername: findUserByUsername
+    findUserByUsername: findUserByUsername,
+    updateUser: updateUser
 };
 
 module.exports = api;
