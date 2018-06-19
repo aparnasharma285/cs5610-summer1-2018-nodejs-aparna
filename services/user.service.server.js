@@ -7,6 +7,7 @@ module.exports = function (app) {
     app.get('/api/profile', profile);
     app.post('/api/logout', logout);
     app.post('/api/login', login);
+    app.get('/api/status', getLoginStatus);
 
     var userModel = require('../models/user/user.model.server');
 
@@ -77,5 +78,13 @@ module.exports = function (app) {
             .then(function (users) {
                 res.send(users);
             })
+    }
+
+    function getLoginStatus(req,res) {
+        if (req.session['currentUser'] !== undefined){
+            res.sendStatus(200)
+        } else {
+            res.sendStatus(204)
+        }
     }
 }
