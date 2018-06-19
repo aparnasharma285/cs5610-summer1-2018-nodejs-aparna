@@ -15,12 +15,12 @@ module.exports = function (app) {
         userModel
             .findUserByCredentials(credentials)
             .then(function (user) {
-                if(user !== null){
-                req.session['currentUser'] = user;
-                res.json(user);
-            } else {
-                res.sendStatus(204);
-                }
+                if(user){
+                    req.session['currentUser'] = user;
+                    res.json(user);
+                } else {
+                    res.sendStatus(204);
+                    }
             })
     }
 
@@ -68,7 +68,8 @@ module.exports = function (app) {
 
     function updateProfile(req, res) {
         var updatedUser = req.body;
-        return userModel.updateUser(updatedUser)
+        userModel.updateUser(updatedUser);
+        return res.sendStatus(200);
     }
 
     function findAllUsers(req, res) {
