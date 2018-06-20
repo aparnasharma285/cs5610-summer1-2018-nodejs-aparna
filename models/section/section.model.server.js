@@ -1,6 +1,12 @@
 var mongoose = require('mongoose');
 var sectionSchema = require('./section.schema.server');
 var sectionModel = mongoose.model('SectionModel', sectionSchema);
+var enrollmentSchema = require('../enrollment/enrollment.schema.server');
+var enrollmentModel = mongoose.model(
+    'EnrollmentModel',
+    enrollmentSchema
+);
+var ObjectId = require('mongodb').ObjectID;
 
 function createSection(section) {
     return sectionModel.create(section);
@@ -44,6 +50,13 @@ function updatingSection(section){
 }
 
 function deletingSection(sectionId) {
+
+    deleteSection = sectionModel.findOne({"_id":sectionId});
+    enrollmentModel.remove({"section": ObjectId(sectionId)}, function (err, result) {
+        if (err) {
+            return -1;
+        }
+    });
     sectionModel.remove({_id: sectionId}, function (err, result) {
         if (err) {
             return -1;
