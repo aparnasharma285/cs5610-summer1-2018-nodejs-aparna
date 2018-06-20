@@ -2,10 +2,11 @@ module.exports = function (app) {
 
     app.post('/api/course/:courseId/section', createSection);
     app.get('/api/course/:courseId/section', findSectionsForCourse);
+    app.get('/api/section/:sectionId', findSectionById);
     app.put('/api/course/:courseId/section/:sectionId', updateSection);
     app.delete('/api/course/:courseId/section/:sectionId', deleteSection);
     app.post('/api/section/:sectionId/enrollment', enrollStudentInSection);
-    app.post('/api/section/:sectionId/unenrollment', unenrollStudentInSection);
+    app.put('/api/section/:sectionId/unenrollment', unenrollStudentInSection);
     app.get('/api/student/section', findSectionsForStudent);
 
     var sectionModel = require('../models/section/section.model.server');
@@ -19,6 +20,15 @@ module.exports = function (app) {
             .then(function (enrollments) {
                 res.json(enrollments);
             });
+    }
+
+
+    function findSectionById(req,res) {
+        var sectionId = req.params.sectionId;
+        sectionModel.findById(sectionId)
+            .then(function (section)  {
+                res.json(section);
+            })
     }
 
     function enrollStudentInSection(req, res) {
@@ -51,14 +61,10 @@ module.exports = function (app) {
             section: sectionId
         };
 
-        sectionModel
-            .incrementSectionSeats(sectionId)
+        sectionModel.incrementSectionSeats(sectionId)
             .then(function () {
-                return enrollmentModel
-                    .unenrollStudentInSection(enrollment)
-            })
-            .then(function (enrollment) {
-                res.json(enrollment);
+                 enrollmentModel.unenrollStudentInSection(enrollment)
+                res.sendStatus(200)
             })
     }
 

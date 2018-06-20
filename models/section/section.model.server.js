@@ -64,11 +64,17 @@ function deletingSection(sectionId) {
     })
 }
 
+
+function findById(sectionId) {
+    return sectionModel.find({"_id" : sectionId})
+}
+
 module.exports = {
     createSection: createSection,
     findSectionsForCourse: findSectionsForCourse,
     decrementSectionSeats: decrementSectionSeats,
     incrementSectionSeats: incrementSectionSeats,
     updatingSection: updatingSection,
-    deletingSection: deletingSection
+    deletingSection: deletingSection,
+    findById: findById
 };

@@ -4,13 +4,15 @@ var enrollmentModel = mongoose.model(
     'EnrollmentModel',
     enrollmentSchema
 );
+var ObjectId = require('mongodb').ObjectID;
 
 function enrollStudentInSection(enrollment) {
     return enrollmentModel.create(enrollment);
 }
 
 function unenrollStudentInSection(enrollment) {
-    enrollmentModel.remove({enrollment}, function (err, result) {
+    enrollmentModel.remove({"student":ObjectId(enrollment.student),"section":ObjectId(enrollment.section)},
+        function (err, result) {
 
         if (err) {
             return response.status(204);
