@@ -17,7 +17,9 @@ module.exports = function (app) {
             .findUserByCredentials(credentials)
             .then(function (user) {
                 if(user){
+
                     req.session['currentUser'] = user;
+                    req.session.cookie.maxAge = (30 * 60 * 1000);
                     res.json(user);
                 } else {
                     res.sendStatus(204);
