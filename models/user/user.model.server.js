@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var userSchema = require('./user.schema.server');
 var userModel = mongoose.model('UserModel', userSchema);
 
+
 function findUserByCredentials(credentials) {
     return userModel.findOne(credentials);
 }
@@ -46,14 +47,7 @@ function updateUser(updatedUser) {
         return existingUser.save();
     })
 
-
-
-
-
-
     return updatedUser;
-
-
 }
 
 function findUserByUsername(username) {
@@ -64,13 +58,21 @@ function findAllUsers() {
     return userModel.find();
 }
 
+function deletingProfile(username) {
+    userModel.remove({"username":username},function (err, result) {
+        if (err) {
+            return -1;
+        }})
+}
+
 var api = {
     createUser: createUser,
     findAllUsers: findAllUsers,
     findUserById: findUserById,
     findUserByCredentials: findUserByCredentials,
     findUserByUsername: findUserByUsername,
-    updateUser: updateUser
+    updateUser: updateUser,
+    deletingProfile: deletingProfile
 };
 
 module.exports = api;

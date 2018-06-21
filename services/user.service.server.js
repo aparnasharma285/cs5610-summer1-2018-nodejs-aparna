@@ -2,14 +2,17 @@ module.exports = function (app) {
     app.get('/api/user', findAllUsers);
     app.get('/api/user/:userId', findUserById);
     app.get('/api/user/username/:username', findUserByUsername);
-    app.post('/api/user', createUser);
-    app.put('/api/user', updateProfile);
+    app.post('/api/register', createUser);
+    app.put('/api/profile', updateProfile);
     app.get('/api/profile', profile);
+    app.delete('/api/profile', deleteProfile);
     app.post('/api/logout', logout);
     app.post('/api/login', login);
     app.get('/api/status', getLoginStatus);
 
     var userModel = require('../models/user/user.model.server');
+    var sectionModel = require('../models/section/section.model.server');
+    var enrollmentModel = require('../models/enrollment/enrollment.model.server');
 
     function login(req, res) {
         var credentials = req.body;
@@ -88,5 +91,16 @@ module.exports = function (app) {
         } else {
             res.sendStatus(204)
         }
+    }
+
+    function deleteProfile(req,res) {
+        enrollmentModel.findSectionsForStudent()
+            .then(enrollments => {
+                enrollments.map(enrollment => {
+                    enrollmentModel.unenrollStudentInSection(enrollment)
+                })});
+        user = req.session['currentUser'];
+        userModel.deletingProfile(user.username);
+        res.sendStatus(200);
     }
 }
